@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/Box'
@@ -7,7 +8,7 @@ import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
 function ProfileSidebar(props){
   
   return (
-    <Box>
+    <Box as="aside">
       <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px'}}/>
       <hr />
       <a className="boxLink" href={`https://github.com/${props.githubUser}`}>
@@ -20,6 +21,11 @@ function ProfileSidebar(props){
 }
 
 export default function Home() {
+  const [comunidades, setComunidades] = React.useState([{
+    id: '1234546789542454365465456345863459',
+    title: 'Eu odeio acordar cedo',
+    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+  }]);
 
   const githubUser = 'fellipedepalma';
   const devsFavoritos = [
@@ -30,18 +36,18 @@ export default function Home() {
     'marcobrunodev',
     'vanessametonini'
   ];
-  const comunidades = [
+  /* const comunidades = [
     'Alurakut',
     'Queria Sorvete, mas era feijão',
     'Tocava Campainha e Corria',
     'Eu Abro a Geladeira pra Pensar',
     'Nietzsche for Speed',
     'Lenin, de Três'
-  ]
+  ]*/
   
   return (
     <>
-    <AlurakutMenu />
+    <AlurakutMenu githubUser={githubUser}/>
     <MainGrid>
       <div className="profileArea" style={{ gridArea: 'profileArea'}}>
         <ProfileSidebar githubUser={githubUser}/>
@@ -57,7 +63,16 @@ export default function Home() {
 
           <form onSubmit={function handleCriaComunidade(e){
             e.preventDefault();
+            const dadosDoForm = new FormData(e.target);
 
+            const comunidade = {
+              id: new Date().toISOString,
+              title: dadosDoForm.get('title'),
+              image: dadosDoForm.get('image')
+            }
+            const comunidadesAtualizadas = [...comunidades, comunidade];
+            setComunidades(comunidadesAtualizadas);
+            
           }}>
             <div>
               <input 
@@ -72,7 +87,7 @@ export default function Home() {
                 name="image"
                 aria-label="Coloque uma URL para usarmos de capa"
               />
-              <button>
+              <button style={{backgroundColor: '#6E92BB'}}>
                 Criar comunidade
               </button>
             </div>
@@ -84,14 +99,14 @@ export default function Home() {
         
         <ProfileRelationsBoxWrapper>
           <h2 className="smallTitle">
-            Devs Mais que Friends ({devsFavoritos.length})
+            Amigos ({devsFavoritos.length})
           </h2>
 
           <ul>
           {devsFavoritos.map((itemAtual) => {
             return (
-              <li>
-                <a href={`/users/${itemAtual}`} key={itemAtual}>
+              <li key={itemAtual}>
+                <a href={`/users/${itemAtual}`}>
                   <img src={`https://github.com/${itemAtual}.png`} />
                 <span>{itemAtual}</span>
                 </a>
@@ -102,14 +117,16 @@ export default function Home() {
         </ProfileRelationsBoxWrapper>
         
         <ProfileRelationsBoxWrapper>
-          <h2 className="SmallTitle">Comunidades</h2>
+          <h2 className="SmallTitle">
+            Comunidades ({comunidades.length})
+          </h2>
           <ul>
             {comunidades.map((itemAtual) => {
               return (
-                <li>
-                  <a href={`/comunidades/${itemAtual}`} key={itemAtual}>
-                    <img src={`http://placehold.it/300x300`} alt=""/>
-                    <span>{itemAtual}</span>
+                <li key={itemAtual.id}>
+                  <a href={`/comunidades/${itemAtual.title}`}>
+                    <img src={itemAtual.image} alt=""/>
+                    <span>{itemAtual.title}</span>
                   </a>
                 </li>
               )

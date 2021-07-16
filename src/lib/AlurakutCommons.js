@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
 
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
-
 
 function Link({ href, children, ...props }) {
   return (
@@ -163,7 +162,9 @@ AlurakutMenu.Logo = styled.img`
 `;
 
 function AlurakutMenuProfileSidebar({ githubUser }) {
+  console.log(githubUser);
   return (
+    
     <div className="alurakutMenuProfileSidebar">
       <div>
         <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '8px' }} />
